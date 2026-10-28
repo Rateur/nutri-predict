@@ -1,0 +1,20 @@
+# SECRETS
+.env
+
+# PYTHON CACHES
+__pycache__/
+.pytest_cache/
+.venv/
+.venv-reports/
+venv/
+
+# ORCHESTRATION
+tasks/
+
+# RESEARCH
+research/data/*
+
+# MLFLOW
+mlruns/
+mlruns.db
+
