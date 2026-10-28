@@ -1,7 +1,7 @@
 pydantic-settings
 cryptography
 asyncpg
-sqlalchemy>=2.0.0
+sqlalchemy[asyncio]>=2.0.0
 pydantic[email]
 fastapi>=0.100.0,<0.116.0
 uvicorn>=0.23.0
