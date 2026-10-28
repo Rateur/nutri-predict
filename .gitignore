@@ -11,8 +11,18 @@ venv/
 # ORCHESTRATION
 tasks/
 
-# RESEARCH
+# RESEARCH : seuls les jeux de données ci-dessous sont versionnés (la CI valide le modèle dessus)
 research/data/*
+!research/data/processed/
+!research/data/raw/
+research/data/processed/*
+research/data/raw/*
+!research/data/processed/.gitkeep
+!research/data/processed/ml_test_dataset.parquet
+!research/data/processed/ml_training_dataset.parquet
+!research/data/processed/off_biscuits_fr.parquet
+!research/data/raw/.gitkeep
+!research/data/raw/off_biscuits_fr.json
 
 # MLFLOW
 mlruns/
