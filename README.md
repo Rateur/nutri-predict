@@ -100,7 +100,7 @@ cp .env.example .env
 python -c "import base64, os; print(base64.urlsafe_b64encode(os.urandom(32)).decode())"
 ```
 
-Reporter la meme valeur d'`API_KEY` dans `frontend/app.js`.
+Reporter la meme valeur d'`API_KEY` dans `frontend/app.js`. C'est une cle de demo : le front la lit en clair. En production, le front passerait par un serveur qui garde la cle.
 
 ### 2. Demarrer l'infrastructure
 
@@ -113,7 +113,7 @@ docker compose up -d --build
 | API (Swagger) | `http://localhost:8000/docs` |
 | Frontend | `http://localhost:5500` |
 | Prometheus | `http://localhost:9090` |
-| Grafana | `http://localhost:3000` (admin/admin) |
+| Grafana | `http://localhost:3000` (admin/admin par defaut, a changer avec `GRAFANA_PASSWORD`) |
 
 ### 3. Developpement local (sans Docker)
 
