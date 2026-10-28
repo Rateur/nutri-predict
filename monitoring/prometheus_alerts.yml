@@ -1,0 +1,24 @@
+groups:
+  - name: API_Alerts
+    rules:
+      - alert: HighErrorRate
+        expr: |
+          sum(rate(http_requests_total{status=~"5.."}[5m])) 
+          / 
+          sum(rate(http_requests_total[5m])) > 0.01
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Taux d'erreur HTTP 5xx élevé"
+          description: "Plus de 1% des requêtes se terminent en erreur serveur sur les 5 dernières minutes."
+
+      - alert: HighInferenceLatency
+        expr: |
+          histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{handler="/api/v1/predict"}[5m])) by (le)) > 0.1
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Latence d'inférence (p99) trop élevée"
+          description: "Le 99ème centile de la latence d'inférence ML a dépassé 100ms sur les 5 dernières minutes."

@@ -1,0 +1,63 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: nutri_db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-nutri_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nutri_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-nutri_db}
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-nutri_user} -d ${POSTGRES_DB:-nutri_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: nutri_api
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-nutri_user}:${POSTGRES_PASSWORD:-nutri_pass}@db:5432/${POSTGRES_DB:-nutri_db}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      PROJECT_NAME: ${PROJECT_NAME:-NutriPredict}
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: nutri_prometheus
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: nutri_grafana
+    depends_on:
+      - prometheus
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres_data:
+  prometheus_data:
+  grafana_data:
