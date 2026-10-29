@@ -16,6 +16,7 @@ Systeme de Machine Learning de bout en bout predisant l'impact ponderal d'une co
 - [Securite](#securite)
 - [Installation et deploiement](#installation-et-deploiement)
 - [Tests](#tests)
+- [Points de repere](#points-de-repere)
 - [Rapports RNCP](#rapports-rncp)
 
 ---
@@ -136,6 +137,17 @@ PYTHONPATH=. pytest research/scripts/test_model_performance.py -v
 ```
 
 Les seuils de performance sont verifies automatiquement a chaque push via le pipeline CI (`test-ml-performance`).
+
+---
+
+## Points de repere
+
+Les donnees sont simulees : la cible contient un bruit de 2 g d'ecart-type. Sur le jeu de test (1000 cas) :
+
+- **Regression lineaire** : R2 = 0.959.
+- **Maximum possible** : R2 = 0.993. C'est le R2 de la formule sans bruit ; le bruit interdit d'aller plus haut.
+- **RandomForest** : R2 = 0.985, avec 100 arbres comme avec 50.
+- Pour verifier : `python research/scripts/baselines.py` (dependances : `research/requirements.txt`).
 
 ---
 
